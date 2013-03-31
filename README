@@ -1,0 +1,98 @@
+Python script to perform server configuration files backup over
+an SSH connection.
+
+Author: Renato Candido <renato@liria.com.br>
+Copyright 2013 Liria Tecnologia <http://www.liria.com.br>
+License: GPL
+
+ABOUT
+-----
+
+This Python script reads a configuration file that defines the necessary
+information for an SSH connection to a remote server and a list of installed
+services on the server. Based on this list, the script performs a back up of
+the configuration files of each service and downloads it to the local machine.
+
+INSTALL
+-------
+
+The script uses Python Fabric for the connection and for the execution of the
+remote backup commands. Therefore, Fabric is needed on the local machine. To
+install it, you can use pip:
+
+  # pip install fabric
+
+Fabric executes the remote commands using sudo. Therefore, it is necessary to
+configure the remote server to allow the desired user to perform the commands
+necessary for the backup task. This can be done editing the '/etc/sudoers' file.
+For now, the necessary commands for the backup taks are:
+
+  /bin/cp, /bin/rm, /bin/mkdir, /bin/tar, /bin/cat, /usr/bin/find
+
+To allow a user named 'administrator' to perform these commands using sudo,
+you can add the following lines to the '/etc/sudoers' file:
+
+# User alias specification
+User_Alias      MYADMINS = administrator
+
+# Cmnd alias specification
+Cmnd_Alias      BACKUP = /bin/cp, /bin/rm, /bin/mkdir, /bin/tar, /bin/cat, /usr/bin/find
+
+# Allow MYADMINS to backup files
+MYADMINS ALL = BACKUP
+
+CONFIG
+------
+
+The config is made on a config file on the local machine. It can have
+any name since its name is passed as an argument to script. The format
+of the config file is the following:
+
+####### Begin of file ######
+
+[server]
+user = administrator
+host = 189.200.10.33
+key_filename = /home/bob/.ssh/id_rsa
+passphrase = pass20
+user_password = swordfish
+
+[services]
+passwd_group = Yes
+interfaces = Yes
+resolv_conf = Yes
+apache = Yes
+varwww = Yes
+bind = Yes
+freedns = No
+crontab = Yes
+rc_local = Yes
+sudoers = Yes
+squid = Yes
+sarg = No
+samba = Yes
+openvpn = Yes
+dhcp = Yes
+backup = Yes
+ssh = Yes
+
+####### End of file ######
+
+On the [server] section, it is defined the parameters of the SSH connection.
+On the [services] section, it is defined the set of services to have their
+configuration files backed up. A service config backup can be disabled by
+changing its value from Yes to No. Comments can be made using a '#' charecter
+on the beginning of a line. 
+
+USE
+---
+
+Having a configuration file named server.conf, you can run the script with:
+
+ backup_server.py server.conf
+
+From a Python script, the backup can be run using the lines:
+
+  from backup_server import backup_server
+
+  backup_server('server.conf')
