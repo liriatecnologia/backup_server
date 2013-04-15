@@ -26,6 +26,9 @@ Changelog:
 
 2013-03-28
 Initial commit.
+
+2013-04-15
+Added backup of shadow and gshadow files.
 """
 
 from fabric.api import *
@@ -40,6 +43,8 @@ def backup_passwd_group():
     """
     sudo('cp /etc/passwd ~/config', shell=False)
     sudo('cp /etc/group ~/config', shell=False)
+    sudo('cp /etc/shadow ~/config', shell=False)
+    sudo('cp /etc/gshadow ~/config', shell=False)
 
 def backup_interfaces():
     """
