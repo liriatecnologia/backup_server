@@ -162,6 +162,13 @@ def backup_ssh():
     """
     sudo('cp -R /etc/ssh ~/config', shell=False)
 
+def backup_maillog():
+    """
+    Backup up of maillog.py configuration files.
+    """
+    sudo('cp -R /usr/local/bin/maillog.py ~/config', shell=False)
+
+
 def backup(user, host, key_filename, passphrase,
            user_password, services):
     """
