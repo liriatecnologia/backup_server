@@ -136,11 +136,14 @@ def backup_dhcp():
     Backup of DHCP configuration files.
     """
     debian_version_str = str(sudo('cat /etc/issue', shell=False))
-    debian_version = re.search(r'\d+\.\d+', debian_version_str).group()
-    if debian_version == '6.0':
-        sudo('cp -R /etc/dhcp ~/config', shell=False)
-    elif debian_version == '5.0':
+    try:
+        debian_version = re.search(r'\d+\.\d+', debian_version_str).group()
+    except:
+        debian_version = ""
+    if debian_version == '5.0':
         sudo('cp -R /etc/dhcp3 ~/config', shell=False)
+    else:
+        sudo('cp -R /etc/dhcp ~/config', shell=False)
 
 def backup_backup():
     """
