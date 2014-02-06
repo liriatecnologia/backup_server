@@ -75,10 +75,13 @@ openvpn = Yes
 dhcp = Yes
 backup = Yes
 ssh = Yes
+maillog = Yes
 
 ####### End of file ######
 
 On the [server] section, it is defined the parameters of the SSH connection.
+Besides the parameters shown above, you may optionally use the "port" parameter
+to set up SSH connections on a port different from 22.
 On the [services] section, it is defined the set of services to have their
 configuration files backed up. A service config backup can be disabled by
 changing its value from Yes to No. Comments can be made using a '#' charecter

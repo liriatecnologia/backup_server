@@ -29,6 +29,9 @@ Initial commit.
 
 2013-04-15
 Added backup of shadow and gshadow files.
+
+2014-02-05
+Added support for SSH port different from 22.
 """
 
 from fabric.api import *
@@ -169,7 +172,7 @@ def backup_maillog():
     sudo('cp -R /usr/local/bin/maillog.py ~/config', shell=False)
 
 
-def backup(user, host, key_filename, passphrase,
+def backup(user, host, port, key_filename, passphrase,
            user_password, services):
     """
     Main backup function. Based on a set of parameters to connect to a
@@ -192,7 +195,10 @@ def backup(user, host, key_filename, passphrase,
     directory ~/config/backup.
     """
 
-    host_string = user + "@" + host
+    if port != "22":
+        host_string = user + "@" + host + ":" + port
+    else:
+        host_string = user + "@" + host
     with settings(host_string = host_string, key_filename = key_filename,
                   password = passphrase):
         run(':')
@@ -235,6 +241,10 @@ def backup_server(config_file):
             key_filename = config.get('server','key_filename')
             passphrase = config.get('server','passphrase')
             user_password = config.get('server', 'user_password')
+            if ('port' in config.options('server')):
+                port = config.get('server','port')
+            else:
+                port = "22"
             services = config.options('services')
             services_enabled = services[:]
             parse_services_ok = True
@@ -257,7 +267,7 @@ def backup_server(config_file):
                     parse_services_ok = False
 
             if parse_services_ok:
-                backup(user, host, key_filename, passphrase,
+                backup(user, host, port, key_filename, passphrase,
                        user_password, services_enabled)
 
         else:
