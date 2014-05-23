@@ -76,6 +76,7 @@ dhcp = Yes
 backup = Yes
 ssh = Yes
 maillog = Yes
+asterisk = Yes
 
 ####### End of file ######
 

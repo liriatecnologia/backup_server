@@ -7,7 +7,7 @@ an SSH connection. For information on how to install, see the
 README file.
 
 Author: Renato Candido <renato@liria.com.br>
-Copyright 2013 Liria Tecnologia <http://www.liria.com.br>
+Copyright 2014 Liria Tecnologia <http://www.liria.com.br>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,6 +32,9 @@ Added backup of shadow and gshadow files.
 
 2014-02-05
 Added support for SSH port different from 22.
+
+2014-05-22
+Added backup of Asterisk files.
 """
 
 from fabric.api import *
@@ -171,6 +174,16 @@ def backup_maillog():
     """
     sudo('cp -R /usr/local/bin/maillog.py ~/config', shell=False)
 
+def backup_asterisk():
+    """
+    Backup up of Asterisk configuration files.
+    """
+    sudo('mkdir -p ~/config/asterisk/etc', shell=False)
+    sudo('mkdir -p ~/config/asterisk/share', shell=False)
+    sudo('cp -R /etc/asterisk ~/config/asterisk/etc', shell=False)
+    sudo('cp -R /usr/share/asterisk/agi-bin ~/config/asterisk/share', shell=False)
+    sudo('cp -R /usr/share/asterisk/moh ~/config/asterisk/share', shell=False)
+    sudo('cp -R /usr/share/asterisk/sounds ~/config/asterisk/share', shell=False)
 
 def backup(user, host, port, key_filename, passphrase,
            user_password, services):
