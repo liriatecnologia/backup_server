@@ -98,7 +98,17 @@ def backup_wpaddat():
     """
     Backup of wpadt.dat file (auto proxy configuration).
     """
-    sudo('cp /var/www/wpad.dat ~/config', shell=False)
+
+    debian_version_str = str(sudo('cat /etc/issue', shell=False))
+
+    try:
+        debian_version = re.search(r'\d+', debian_version_str).group()
+    except:
+        debian_version = ""
+    if debian_version == '8':
+        sudo('cp /var/www/html/wpad.dat ~/config', shell=False)
+    else:
+        sudo('cp /var/www/wpad.dat ~/config', shell=False)
 
 def backup_bind():
     """
@@ -123,7 +133,16 @@ def backup_squid():
     """
     Backup of Squid configuration files.
     """
-    sudo('cp -R /etc/squid ~/config', shell=False)
+    debian_version_str = str(sudo('cat /etc/issue', shell=False))
+
+    try:
+        debian_version = re.search(r'\d+', debian_version_str).group()
+    except:
+        debian_version = ""
+    if debian_version == '8':
+        sudo('cp -R /etc/squid3 ~/config', shell=False)
+    else:
+        sudo('cp -R /etc/squid ~/config', shell=False)
 
 def backup_sarg():
     """
@@ -225,7 +244,7 @@ def backup(user, host, port, key_filename, passphrase,
                     print ("Error on backup of " + service
                            + ". Check if the service is installed")
                     sudo('rm -rf ~/config', shell=False)
-                    sys.exit(1)                    
+                    sys.exit(1)
             sudo('tar -C ~/ -czvf config.tar.gz config/*', shell=False)
             sudo('rm -rf ~/config', shell=False)
             get('~/config.tar.gz', './')
